@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BookValidationTests {
+
   private static Validator validator;
 
   @BeforeAll
@@ -24,19 +25,18 @@ class BookValidationTests {
 
   @Test
   void whenAllFieldsCorrectThenValidationSucceeds() {
-    var book = new Book("1234567890", "Title", "Author", 9.90);
+    var book = Book.of("1234567890", "Title", "Author", 9.90);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).isEmpty();
   }
 
   @Test
   void whenIsbnNotDefinedThenValidationFails() {
-    var book = new Book("", "Title", "Author", 9.90);
+    var book = Book.of("", "Title", "Author", 9.90);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(2);
     List<String> constraintViolationMessages = violations.stream()
-                                                         .map(ConstraintViolation::getMessage)
-                                                         .collect(Collectors.toList());
+                                                         .map(ConstraintViolation::getMessage).collect(Collectors.toList());
     assertThat(constraintViolationMessages)
       .contains("The book ISBN must be defined.")
       .contains("The ISBN format must be valid.");
@@ -44,7 +44,7 @@ class BookValidationTests {
 
   @Test
   void whenIsbnDefinedButIncorrectThenValidationFails() {
-    var book = new Book("a234567890", "Title", "Author", 9.90);
+    var book = Book.of("a234567890", "Title", "Author", 9.90);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(1);
     assertThat(violations.iterator().next().getMessage())
@@ -53,7 +53,7 @@ class BookValidationTests {
 
   @Test
   void whenTitleIsNotDefinedThenValidationFails() {
-    var book = new Book("1234567890", "", "Author", 9.90);
+    var book = Book.of("1234567890", "", "Author", 9.90);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(1);
     assertThat(violations.iterator().next().getMessage())
@@ -62,7 +62,7 @@ class BookValidationTests {
 
   @Test
   void whenAuthorIsNotDefinedThenValidationFails() {
-    var book = new Book("1234567890", "Title", "", 9.90);
+    var book = Book.of("1234567890", "Title", "", 9.90);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(1);
     assertThat(violations.iterator().next().getMessage())
@@ -71,7 +71,7 @@ class BookValidationTests {
 
   @Test
   void whenPriceIsNotDefinedThenValidationFails() {
-    var book = new Book("1234567890", "Title", "Author", null);
+    var book = Book.of("1234567890", "Title", "Author", null);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(1);
     assertThat(violations.iterator().next().getMessage())
@@ -80,7 +80,7 @@ class BookValidationTests {
 
   @Test
   void whenPriceDefinedButZeroThenValidationFails() {
-    var book = new Book("1234567890", "Title", "Author", 0.0);
+    var book = Book.of("1234567890", "Title", "Author", 0.0);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(1);
     assertThat(violations.iterator().next().getMessage())
@@ -89,10 +89,11 @@ class BookValidationTests {
 
   @Test
   void whenPriceDefinedButNegativeThenValidationFails() {
-    var book = new Book("1234567890", "Title", "Author", -9.90);
+    var book = Book.of("1234567890", "Title", "Author", -9.90);
     Set<ConstraintViolation<Book>> violations = validator.validate(book);
     assertThat(violations).hasSize(1);
     assertThat(violations.iterator().next().getMessage())
       .isEqualTo("The book price must be greater than zero.");
   }
+
 }
