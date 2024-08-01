@@ -1,7 +1,18 @@
+FROM eclipse-temurin:17.0.11_9-jdk-jammy AS builder
+WORKDIR /workspace
+COPY gradlew .
+COPY gradlew.bat .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY src src
+RUN chmod +x gradlew
+RUN ./gradlew bootJar
+
 FROM eclipse-temurin:17.0.11_9-jre-jammy AS extractor
 WORKDIR /workspace
 ARG APPLICATION_FILE=catalog-service.jar
-COPY build/libs/${APPLICATION_FILE} ${APPLICATION_FILE}
+COPY --from=builder /workspace/build/libs/${APPLICATION_FILE} ${APPLICATION_FILE}
 RUN java -Djarmode=tools -jar ${APPLICATION_FILE} extract --layers --launcher
 
 FROM eclipse-temurin:17.0.11_9-jre-jammy AS runner
