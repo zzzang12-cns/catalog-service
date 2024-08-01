@@ -3,7 +3,7 @@ on: push
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: zzzang12/catalog-service
+  IMAGE_NAME: zzzang12-cns/catalog-service
   VERSION: latest
 
 jobs:
