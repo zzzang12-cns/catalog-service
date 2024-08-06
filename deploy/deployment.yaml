@@ -19,7 +19,6 @@ spec:
       containers:
       - name: catalog-service
         image: ghcr.io/zzzang12-cns/catalog-service
-        imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
             exec:
@@ -27,8 +26,6 @@ spec:
         ports:
         - containerPort: 9001
         env:
-        - name: BPL_JVM_THREAD_COUNT
-          value: "50"
         - name: SPRING_CLOUD_CONFIG_URI
           value: config-service.default.svc.cluster.local
         - name: SPRING_DATASOURCE_URL
