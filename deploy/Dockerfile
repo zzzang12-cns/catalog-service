@@ -23,4 +23,4 @@ COPY --from=extractor /workspace/extracted/spring-boot-loader ./
 COPY --from=extractor /workspace/extracted/snapshot-dependencies ./
 COPY --from=extractor /workspace/extracted/application ./
 CMD java -jar ${APPLICATION_FILE}
-EXPOSE 8080
+EXPOSE 9001
