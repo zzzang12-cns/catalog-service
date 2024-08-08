@@ -27,7 +27,7 @@ spec:
         - containerPort: 9001
         env:
         - name: SPRING_CLOUD_CONFIG_URI
-          value: config-service.default.svc.cluster.local
+          value: http://config-service.default.svc.cluster.local
         - name: SPRING_DATASOURCE_URL
           value: jdbc:postgresql://polar-postgres.default.svc.cluster.local/polardb_catalog
         - name: SPRING_PROFILES_ACTIVE
